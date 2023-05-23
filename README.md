@@ -8,10 +8,10 @@ VATE (**V**ery **A**dvanced **T**ext **E**ditor) is a lightweight text editor th
 ![](res/VATE_Main_Window.png)
 
 ## Table of contents
-1. [Description](#Description)
-2. [System Requirements](#System%20Requirements)
-3. [How to Contribute](#How%20to%20Contribute)
-3. [License](#License)
+1. [Description](#description)
+2. [System Requirements](#system-requirements)
+3. [How to Contribute](#how-to-contribute)
+3. [License](#license)
 
 <br>
 
