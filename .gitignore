@@ -2,6 +2,7 @@
 ## General
 #############################
 *.txt
+!LICENSE.txt
 *.TXT
 config.conf
 launch4jconfig.xml
