@@ -25,7 +25,7 @@ jobs:
     
   build:
     needs: readPomAndLastRelease
-    if: needs.readPomAndLastRelease.outputs.pomVersion == needs.readPomAndLastRelease.outputs.lastReleaseId # change to != later on
+    if: needs.readPomAndLastRelease.outputs.pomVersion != needs.readPomAndLastRelease.outputs.lastReleaseId
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
