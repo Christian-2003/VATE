@@ -40,10 +40,16 @@ jobs:
         settings-path: ${{ github.workspace }} # location for the settings.xml file
     - name: Build with Maven
       run: mvn package --file pom.xml
-
+    - name: Convert .jar to .exe
+      run: |
+        wget https://deac-riga.dl.sourceforge.net/project/launch4j/launch4j-3/3.50/launch4j-3.50-linux-x64.tgz
+        tar xzf launch4j-3.50-linux-x64.tgz
+        cp target/VATE-${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}.jar target/VATE.jar
+        cd launch4j
+        ./launch4j.jar /home/runner/work/VATE/VATE/launch4j-config.xml
     - uses: ncipollo/release-action@v1
       with:
         name: 'VATE Version ${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}'
         tag: ${{needs.readPomAndLastRelease.outputs.pomVersion}}
-        artifacts: "target/VATE-${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}.jar"
+        artifacts: "target/VATE-${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}.jar,target/VATE.exe"
         body: 'Release VATE Version ${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}'
