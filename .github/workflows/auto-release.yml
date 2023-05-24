@@ -46,8 +46,8 @@ jobs:
         tar xzf launch4j-3.50-linux-x64.tgz
         cp target/VATE-${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}.jar target/VATE.jar
         cd launch4j
-        chmod 755 launch4j.jar
-        ./launch4j.jar /home/runner/work/VATE/VATE/launch4j-config.xml
+        chmod 755 launch4j
+        ./launch4j /home/runner/work/VATE/VATE/launch4j-config.xml
     - uses: ncipollo/release-action@v1
       with:
         name: 'VATE Version ${{ needs.readPomAndLastRelease.outputs.rawPomVersion }}'
