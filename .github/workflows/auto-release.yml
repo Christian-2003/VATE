@@ -6,8 +6,8 @@ jobs:
   readPomAndLastRelease:
     runs-on: ubuntu-latest
     outputs:
-      pomVersion: steps.getXml.outputs.info
-      lastReleaseId: steps.lastRelease.outputs.release
+      pomVersion: ${{steps.getXml.outputs.info}}
+      lastReleaseId: ${{steps.lastRelease.outputs.release}}
     steps:
     - name: Checkout
       uses: actions/checkout@v3
