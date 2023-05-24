@@ -16,7 +16,7 @@ jobs:
       uses: mavrosxristoforos/get-xml-info@1.1.1
       with:
         xml-file: 'pom.xml'
-        xpath: '/project/version'
+        xpath: './/project/version'
     - id: lastRelease
       uses: pozetroninc/github-action-get-latest-release@master
       with:
