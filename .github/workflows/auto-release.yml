@@ -27,6 +27,7 @@ jobs:
     needs: readPomAndLastRelease
     if: needs.readPomAndLastRelease.outputs.pomVersion != needs.readPomAndLastRelease.outputs.lastReleaseId
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
     - uses: actions/checkout@v3
     - run: echo 'VATE Version ${{needs.readPomAndLastRelease.outputs.pomVersion}} and ${{needs.readPomAndLastRelease.outputs.lastReleaseId}}'
