@@ -1,51 +1,42 @@
 package backend.config;
 
-import java.awt.*;
-import java.io.*;
-
 
 /**
- * Contains all attributes that are required for the config file.
- * The values that are assigned to the attributes are the default variables in case there is no config file.
+ * Stores all relevant configurable information for VATE.
  *
  * @author  Christian-2003
- * @version 23 May 2023
+ * @version 25 May 2023
  */
-public class Config implements Serializable {
+public class Config {
 
     /**
-     * Path for the config file.
+     * Stores all colors for VATE.
+     * (i.e. background colors, text colors, ...)
      */
-    public final String configFilePath = "config.conf";
+    public static Colors COLORS;
 
     /**
-     * Default line separator to be used with the application.
+     * Stores all formats for VATE.
+     * (i.e. line separators, date formats, ...)
      */
-    public String lineSeparator = System.lineSeparator();
+    public static Formats FORMATS;
 
     /**
-     * Stores the file that was opened when the editor was closed.
+     * Stores all Strings for VATE.
+     * (i.e. "Open", "Save", "Cancel", "No file type", ...)
      */
-    public String lastOpenedFile = "";
+    public static Strings STRINGS;
 
     /**
-     * Stores the dimensions for the window the last time it was opened.
+     * Stores all Font-related information for VATE.
+     * (i.e. Font families, font sizes, ...)
      */
-    public Dimension lastWindowDimension;
+    public static Fonts FONTS;
 
     /**
-     * Stores whether the line numbers shall be shown or not.
+     * Stores all settings for VATE.
+     * (i.e. whether the default LookAndFeel shall be used, ...)
      */
-    public boolean showLineNumbers = true;
-
-    /**
-     * Stores the font family for the font of the text editor.
-     */
-    public String textEditorFont = "Consolas";
-
-    /**
-     * Stores the font size for the text editor.
-     */
-    public int textSize = 16;
+    public static Settings SETTINGS;
 
 }

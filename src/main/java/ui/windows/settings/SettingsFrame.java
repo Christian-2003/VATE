@@ -1,7 +1,7 @@
-package ui.settings;
+package ui.windows.settings;
 
-import ui.settings.components.TextEditorSettings;
-import ui.windows.MainWindow;
+import ui.windows.settings.components.TextEditorSettings;
+import ui.windows.main.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.awt.*;
  * @author  Christian-2003
  * @version 12 May 2023
  */
-public class SettingsWindow extends JFrame {
+public class SettingsFrame extends JFrame {
 
     /**
      * Stores the options for the settings.
@@ -23,7 +23,7 @@ public class SettingsWindow extends JFrame {
     private final String[] settingsOptions = {"Window", "Text Editor"};
 
 
-    public SettingsWindow(MainWindow context) {
+    public SettingsFrame(MainFrame context) {
         super("Options");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();

@@ -1,4 +1,6 @@
-package ui.components;
+package ui.windows.main.components;
+
+import ui.windows.main.components.TextArea;
 
 import javax.swing.*;
 import javax.swing.text.Element;
@@ -16,7 +18,7 @@ public class LineNumbers extends JTextArea {
     /**
      * Stores the textArea which contains the text for which these line numbers shall be generated.
      */
-    private TextArea textArea;
+    private ui.windows.main.components.TextArea textArea;
 
 
     /**

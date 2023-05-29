@@ -1,6 +1,6 @@
 package backend.html;
 
-import backend.singleton.Singleton;
+import backend.config.Config;
 
 
 /**
@@ -12,10 +12,10 @@ import backend.singleton.Singleton;
 public class ExportToHTML {
 
     /**
-     * Stores the line seperator that shall be used when making the HTML file.
+     * Stores the line separator that shall be used when making the HTML file.
      * This is the {@code System.lineSeparator()} by default but can be changed manually.
      */
-    public static String LINE_SEPERATOR = Singleton.CONFIG.lineSeparator;
+    public static String LINE_SEPERATOR = Config.FORMATS.LINE_SEPARATOR;
 
     /**
      * Stores the tabulator-character that shall be used when formatting the HTML file.

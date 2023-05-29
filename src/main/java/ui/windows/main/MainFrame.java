@@ -1,30 +1,25 @@
-package ui.windows;
+package ui.windows.main;
 
 import backend.config.ConfigWriter;
 import backend.html.ExportToHTML;
 import backend.singleton.Singleton;
-import ui.components.LineNumbers;
-import ui.components.Subline;
-import ui.components.TextArea;
+import ui.windows.main.components.EditorTabbedPane;
 import ui.handles.MainWindowTitleHandle;
 import ui.menu.MainMenu;
+import ui.windows.main.components.editorTabs.TextEditorTab;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.io.*;
-import java.util.regex.*;
 
 
 /**
  * Implements the MainWindow for the VATE.
  *
  * @author  Christian-2003
- * @version 10 May 2023
+ * @version 24 May 2023
  */
-public class MainWindow extends JFrame {
+public class MainFrame extends JFrame {
 
     /**
      * Handle for the title of the MainWindow.
@@ -34,22 +29,12 @@ public class MainWindow extends JFrame {
     /**
      * Main menu for this window.
      */
-    MainMenu menu;
+    private MainMenu menu;
 
     /**
-     * Stores the Subline which displays some statistics about the currently edited file.
+     * TabbedPane contains the EditorTabs of the text editor.
      */
-    Subline subline;
-
-    /**
-     * Line numbers for the textArea.
-     */
-    LineNumbers lineNumbers;
-
-    /**
-     * Displays the content of the file.
-     */
-    TextArea textArea;
+    private EditorTabbedPane editorTabs;
 
 
     /**
@@ -60,7 +45,7 @@ public class MainWindow extends JFrame {
      * @param path              Filepath to load when called. This overrides the previous parameter. Pass {@code null} if
      *                          no file shall be opened and use previous parameter instead.
      */
-    public MainWindow(boolean loadPreviousFile, String path) {
+    public MainFrame(boolean loadPreviousFile, String path) {
         super();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         try {
@@ -70,77 +55,17 @@ public class MainWindow extends JFrame {
         catch (Exception e) {
             //Do nothing...
         }
-        subline = new Subline("none", 0, 1);
-        add(subline, BorderLayout.SOUTH);
         titleHandle = new MainWindowTitleHandle("VATE");
-        setTitle(titleHandle.getTitle());
-        textArea = new TextArea();
-        lineNumbers = new LineNumbers(textArea);
-        requestTextEditorStyleUpdate(); //Load the style from the config.
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        textArea.getDocument().addDocumentListener(new DocumentListener() {
-            /**
-             * Stores the number of lines that previously existed.
-             */
-            private int previousLineNumbers = countLineSeparatorOccurrences();
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                int currentLineNumbers = countLineSeparatorOccurrences();
-                if (previousLineNumbers != currentLineNumbers) {
-                    lineNumbers.updateLineNumbers();
-                    previousLineNumbers = currentLineNumbers;
-                }
-                subline.setFileLength(textArea.getDocument().getLength());
-                subline.setFileLines(currentLineNumbers + 1);
-                titleHandle.hasUnsavedChanges(true);
-                setTitle(titleHandle.getTitle());
-            }
+        //Instantiate editorTabs:
+        editorTabs = new EditorTabbedPane(this);
+        editorTabs.addTab(new TextEditorTab(this, "Text file 1"));
+        editorTabs.addTab(new TextEditorTab(this, "Text file 2"));
+        editorTabs.addTab(new TextEditorTab(this, "Text file 3"));
+        add(editorTabs, BorderLayout.CENTER);
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                int currentLineNumbers = countLineSeparatorOccurrences();
-                if (previousLineNumbers != currentLineNumbers) {
-                    lineNumbers.updateLineNumbers();
-                    previousLineNumbers = currentLineNumbers;
-                }
-                subline.setFileLength(textArea.getDocument().getLength());
-                subline.setFileLines(currentLineNumbers + 1);
-                titleHandle.hasUnsavedChanges(true);
-                setTitle(titleHandle.getTitle());
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                int currentLineNumbers = countLineSeparatorOccurrences();
-                if (previousLineNumbers != currentLineNumbers) {
-                    lineNumbers.updateLineNumbers();
-                    previousLineNumbers = currentLineNumbers;
-                }
-                subline.setFileLength(textArea.getDocument().getLength());
-                subline.setFileLines(currentLineNumbers + 1);
-                titleHandle.hasUnsavedChanges(true);
-                setTitle(titleHandle.getTitle());
-            }
-
-            /**
-             * Counts the number of lines.
-             *
-             * @return  Number of lines.
-             */
-            private int countLineSeparatorOccurrences() {
-                Pattern pattern = Pattern.compile("\n");
-                Matcher matcher = pattern.matcher(textArea.getText());
-                return (int)(matcher.results().count());
-            }
-
-        });
-        textArea.setText("\n");
-        textArea.setText("");
-        scrollPane.setRowHeaderView(lineNumbers);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scrollPane, BorderLayout.CENTER);
+        //Configure style for the tabs:
+        requestTextEditorStyleUpdate();
 
         //Configure window with config data:
         create(loadPreviousFile);
@@ -177,16 +102,19 @@ public class MainWindow extends JFrame {
         titleHandle.setFileName(path);
         titleHandle.hasUnsavedChanges(false);
         setTitle(titleHandle.getTitle());
-        textArea.setText("");
+        if (editorTabs.getActiveTab() instanceof TextEditorTab) {
+            TextEditorTab current = (TextEditorTab)editorTabs.getActiveTab();
+            current.setText("");
+        }
         //Find the file extension:
         String[] pathDivided = path.split("\\.");
         if (pathDivided.length >= 2) {
             //File extension available:
-            subline.setFileExtension(pathDivided[1]);
+            editorTabs.getActiveTab().getSubline().setFileExtension(pathDivided[pathDivided.length - 1]);
         }
         else {
             //No file extension available:
-            subline.setFileExtension("");
+            editorTabs.getActiveTab().getSubline().setFileExtension("");
         }
     }
 
@@ -278,7 +206,11 @@ public class MainWindow extends JFrame {
             //Input cancelled: Do not search a regex:
             return;
         }
-        int index = textArea.getText().indexOf(regex);
+        int index = 0;
+        if (editorTabs.getActiveTab() instanceof TextEditorTab) {
+            TextEditorTab current = (TextEditorTab)editorTabs.getActiveTab();
+            index = current.getText().indexOf(regex);
+        }
         if (index == -1) {
             //No match for regex found:
             JOptionPane.showMessageDialog(this, "Did not find any matches for \"" + regex + "\".");
@@ -313,15 +245,7 @@ public class MainWindow extends JFrame {
      * @param lineNumbers   Whether the line numbers shall be shown or not.
      */
     public void requestToggleLineNumbers(boolean lineNumbers) {
-        Singleton.CONFIG.showLineNumbers = lineNumbers;
-        if (lineNumbers) {
-            //Show line numbers:
-            this.lineNumbers.setVisible(true);
-        }
-        else {
-            //Hide line numbers:
-            this.lineNumbers.setVisible(false);
-        }
+        //editorTabs.requestToggleLineNumbers(lineNumbers);
     }
 
 
@@ -330,21 +254,12 @@ public class MainWindow extends JFrame {
      * This method is intended to be called from the Settings window.
      */
     public void requestTextEditorStyleUpdate() {
-        String[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        boolean fontAvailable = false;
-        for (int i = 0; i < fonts.length; i++) {
-            if (fonts[i].equals(Singleton.CONFIG.textEditorFont)) {
-                fontAvailable = true;
-                break;
-            }
-        }
-        textArea.setFont(new Font(Singleton.CONFIG.textEditorFont, Font.PLAIN, Singleton.CONFIG.textSize));
-        lineNumbers.setFont(new Font(Singleton.CONFIG.textEditorFont, Font.PLAIN, Singleton.CONFIG.textSize));
+        //editorTabs.requestTextEditorStyleUpdate();
     }
 
 
     /**
-     * Loads the contents of the passed file. The content of the file will be displayed with the {@link #textArea}.
+     * Loads the contents of the passed file. The content of the file will be displayed with the textArea.
      * If the file could not be opened, false will be returned.
      *
      * @param path  Path of the file whose content shall be displayed.
@@ -356,16 +271,16 @@ public class MainWindow extends JFrame {
             while (reader.ready()) {
                 content.append(reader.readLine() + '\n');
             }
-            textArea.setText(content.toString());
+            //editorTabs.getActiveTab().setText(content.toString());
             titleHandle.setFileName(path);
             titleHandle.hasUnsavedChanges(false);
             setTitle(titleHandle.getTitle());
             String[] pathDivided = path.split("\\.");
             if (pathDivided.length >= 2) {
-                subline.setFileExtension(pathDivided[1]);
+                editorTabs.getActiveTab().getSubline().setFileExtension(pathDivided[pathDivided.length - 1]);
             }
             else {
-                subline.setFileExtension("none");
+                editorTabs.getActiveTab().getSubline().setFileExtension("none");
             }
             return true;
         }
@@ -396,13 +311,14 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Saves the content of the JTextArea {@link #textArea} to the file.
+     * Saves the content of the JTextArea to the file.
      *
      * @param path      Path to which the file shall be saved.
      * @return          Whether the file was saved successfully.
      */
     private boolean saveFile(String path) {
-        return saveFile(path, textArea.getText());
+        return false;
+        //return saveFile(path, editorTabs.getActiveTab().getText());
     }
 
 
@@ -413,9 +329,9 @@ public class MainWindow extends JFrame {
      */
     private void exportToHTML(String path) {
         String[] filename = path.split("\\.");
-        if (subline.getFileExtension().equals("html")) {
+        if (editorTabs.getActiveTab().getSubline().getFileExtension().equals("html")) {
             //The document is already HTML:
-            saveFile(path, textArea.getText());
+            //saveFile(path, editorTabs.getActiveTab().getText());
             return;
         }
         if (filename.length >= 1 && filename[0] != null && !filename[0].equals("")) {
@@ -425,7 +341,7 @@ public class MainWindow extends JFrame {
         else {
             ExportToHTML.HTML_TITLE = path;
         }
-        saveFile(path, ExportToHTML.GENERATE_HTML(textArea.getText()));
+        //saveFile(path, ExportToHTML.GENERATE_HTML(editorTabs.getActiveTab().getText()));
     }
 
 
@@ -436,9 +352,9 @@ public class MainWindow extends JFrame {
      * @param position  Position to move the cursor to.
      */
     private void moveCursor(int position) {
-        if (position >= 0 && textArea.getDocument().getLength() > position) {
+        if (position >= 0 && editorTabs.getActiveTab().getTextArea().getDocument().getLength() > position) {
             //textArea.moveCaretPosition(position);
-            textArea.setCaretPosition(position);
+            editorTabs.getActiveTab().getTextArea().setCaretPosition(position);
         }
     }
 
@@ -449,7 +365,7 @@ public class MainWindow extends JFrame {
      * @param position  Line to which the cursor shall be moved.
      */
     private void moveCursorToLine(int position) {
-        String content = textArea.getText();
+        String content = editorTabs.getActiveTab().getText();
         int index = 0;
         int currentLine = 1;
         //Iterate through the lines:
@@ -470,7 +386,7 @@ public class MainWindow extends JFrame {
      * @param loadPreviousFile  Whether the previously opened file shall be opened.
      */
     public void create(boolean loadPreviousFile) {
-        lineNumbers.setVisible(Singleton.CONFIG.showLineNumbers);
+        editorTabs.getActiveTab().getSubline().setVisible(Singleton.CONFIG.showLineNumbers);
         if (loadPreviousFile && !Singleton.CONFIG.lastOpenedFile.equals("")) {
             //File was previously opened:
             loadFile(Singleton.CONFIG.lastOpenedFile);

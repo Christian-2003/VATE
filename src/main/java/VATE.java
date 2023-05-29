@@ -1,34 +1,16 @@
-import backend.config.ConfigReader;
-import ui.windows.MainWindow;
+import frontend.frames.main.MainFrame;
 
-import java.io.IOException;
 
 /**
- * This class implements the VATE (Very Advanced Text Editor).
+ * This class resembles the starting point for VATE. It contains the main-method.
  *
  * @author  Christian-2003
- * @version 10 May 2023
+ * @version 25 May 2023
  */
 public class VATE {
 
     public static void main(String[] args) {
-        //Load the config file before anything happens:
-        try {
-            ConfigReader.LOAD_CONFIG();
-        }
-        catch (IOException e) {
-            //Error: Could not open config file:
-            System.err.println(e.getMessage());
-        }
-
-        if (args.length == 1) {
-            //Load passed file name when launched:
-            MainWindow window = new MainWindow(true, args[0]);
-        }
-        else {
-            MainWindow window = new MainWindow(true, null);
-        }
-
+        MainFrame mainFrame = new MainFrame();
     }
 
 }

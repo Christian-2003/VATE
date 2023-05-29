@@ -1,9 +1,9 @@
 package ui.menu;
 
 import backend.singleton.Singleton;
-import ui.windows.LicensesWindow;
-import ui.windows.MainWindow;
-import ui.settings.SettingsWindow;
+import ui.windows.licenses.LicensesFrame;
+import ui.windows.main.MainFrame;
+import ui.windows.settings.SettingsFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ public class MainMenu extends JMenuBar {
     /**
      * Reference to the MainWindow to which this menu is applied.
      */
-    private final MainWindow context;
+    private final MainFrame context;
 
     /**
      * Menu items for the menu "File".
@@ -55,7 +55,7 @@ public class MainMenu extends JMenuBar {
      *
      * @param context   MainWindow to which this menu is applied.
      */
-    public MainMenu(MainWindow context) {
+    public MainMenu(MainFrame context) {
         super();
         this.context = context;
 
@@ -97,7 +97,7 @@ public class MainMenu extends JMenuBar {
         newWindow.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new MainWindow(false, null); //Create a new main window without previous file opened.
+                new MainFrame(false, null); //Create a new main window without previous file opened.
             }
         });
         fileMenu.add(newWindow);
@@ -204,7 +204,7 @@ public class MainMenu extends JMenuBar {
         settings.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new SettingsWindow(context);
+                new SettingsFrame(context);
             }
         });
         settingsMenu.add(settings);
@@ -223,7 +223,7 @@ public class MainMenu extends JMenuBar {
         license.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new LicensesWindow(); //Create new Licenses Window.
+                new LicensesFrame(); //Create new Licenses Window.
             }
         });
         helpMenu.add(license);

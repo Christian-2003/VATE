@@ -1,8 +1,7 @@
-package ui.settings.components;
+package ui.windows.settings.components;
 
 import backend.singleton.Singleton;
-import ui.components.TextArea;
-import ui.windows.MainWindow;
+import ui.windows.main.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +18,7 @@ import java.awt.event.ActionListener;
  */
 public class TextEditorSettings extends JPanel {
 
-    private final MainWindow context;
+    private final MainFrame context;
 
     /**
      * Checkbox for showing or disabling the line numbers.
@@ -35,7 +34,7 @@ public class TextEditorSettings extends JPanel {
     /**
      * Constructs a new TextEditorSettings instance.
      */
-    public TextEditorSettings(MainWindow context) {
+    public TextEditorSettings(MainFrame context) {
         super();
         this.context = context;
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

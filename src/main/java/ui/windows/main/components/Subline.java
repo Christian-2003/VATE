@@ -1,4 +1,4 @@
-package ui.components;
+package ui.windows.main.components;
 
 import javax.swing.*;
 import java.awt.*;

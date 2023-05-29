@@ -1,4 +1,4 @@
-package ui.windows;
+package ui.windows.licenses;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +10,12 @@ import java.awt.*;
  * @author  Christian-2003
  * @version 11 May 2023
  */
-public class LicensesWindow extends JFrame {
+public class LicensesFrame extends JFrame {
 
     /**
      * Constructs a new LicensesWindow.
      */
-    public LicensesWindow() {
+    public LicensesFrame() {
         super("Licenses");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension displaySize = Toolkit.getDefaultToolkit().getScreenSize();
