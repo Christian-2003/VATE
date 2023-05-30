@@ -3,6 +3,7 @@ package frontend.frames.main;
 import backend.config.Config;
 import backend.files.File;
 import frontend.frames.main.components.EditorTab;
+import frontend.frames.main.components.Tab;
 import frontend.frames.main.components.TabbedPane;
 import frontend.menus.EditMenu;
 import frontend.menus.FileMenu;
@@ -46,14 +47,26 @@ public class MainFrame extends JFrame {
      */
     public MainFrame() {
         super("VATE");
-        create();
+        create(null);
+    }
+
+    /**
+     * Constructs a new MainFrame.
+     *
+     * @param paths Files to open when started.
+     */
+    public MainFrame(String[] paths) {
+        super("VATE");
+        create(paths);
     }
 
 
     /**
      * Constructs and instantiates the MainFrame.
+     *
+     * @param paths Files to open when started. Pass {@code null} if no file shall be opened.
      */
-    private void create() {
+    private void create(String[] paths) {
         //Set LookAndFeel for this MainFrame:
         try {
             if (Config.SETTINGS.USE_SYSTEM_LOOK_AND_FEEL) {
@@ -76,6 +89,26 @@ public class MainFrame extends JFrame {
         menuBar.add(editMenu);
         add(menuBar, BorderLayout.NORTH);
         tabs.updateTabbedPane(); //Enable / Disable menu items based on needs.
+
+        //Open files if necessary:
+        if (paths != null) {
+            //Open passed files as tabs:
+            for (String current : paths) {
+                File newFile = new File(current);
+                if (newFile.exists()) {
+                    tabs.addTab(current);
+                }
+            }
+        }
+        else if (Config.SETTINGS.LOAD_PREVIOUS_FILES_WHEN_OPENED) {
+            //Open previously opened files as tabs:
+            for (String current : Config.SETTINGS.PREVIOUSLY_OPENED_FILES) {
+                File newFile = new File(current);
+                if (newFile.exists()) {
+                    tabs.addTab(current);
+                }
+            }
+        }
 
         setSize(1024, 512);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -176,6 +209,11 @@ public class MainFrame extends JFrame {
                 //Do not dispose this window:
                 return;
             }
+        }
+        //Save currently opened tabs to config:
+        Config.SETTINGS.PREVIOUSLY_OPENED_FILES.clear();
+        for (int i = 0; i < tabs.getTabCount(); i++) {
+            Config.SETTINGS.PREVIOUSLY_OPENED_FILES.add(((Tab)tabs.getComponentAt(i)).getFile().getPath());
         }
         super.dispose();
     }

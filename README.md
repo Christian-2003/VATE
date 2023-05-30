@@ -40,7 +40,7 @@ The **V**ery **A**dvanced **T**ext **E**ditor VATE is a lightweight text editor 
 All these functionalites work while multiple files are opened simultaniously.
 
 ### Used Technologies
-VATE's backend is developed with _Java_, with the frontend being developed with _Java Swing_. Therefore, VATE requires a working Java Runtime Environment (JRE) on your compiter to run the program that supports **Java 17**.
+VATE's backend is developed with _Java_, with the frontend being developed with _Java Swing_. Therefore, VATE requires a working Java Runtime Environment (JRE) on your computer that supports **Java 17** to run the program.
 
 The project uses _Apache Maven_ as build tool.
 

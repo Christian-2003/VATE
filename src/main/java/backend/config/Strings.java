@@ -1,5 +1,6 @@
 package backend.config;
 
+
 /**
  * Stores all Strings that are used by VATE.
  */
