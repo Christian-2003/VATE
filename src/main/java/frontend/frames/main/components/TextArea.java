@@ -34,8 +34,8 @@ public class TextArea extends JScrollPane {
         public LineNumbers() {
             super();
             setEditable(false);
-            setBackground(Config.COLORS.LINE_NUMBERS_BACKGROUND);
-            setForeground(Config.COLORS.LINE_NUMBERS_FOREGROUND);
+            setBackground(Config.colors.LINE_NUMBERS_BACKGROUND);
+            setForeground(Config.colors.LINE_NUMBERS_FOREGROUND);
         }
 
 
@@ -50,7 +50,7 @@ public class TextArea extends JScrollPane {
             StringBuilder lineNumbers = new StringBuilder();
             for (int i = 1; i < root.getElementIndex(documentLength) + 2; i++) {
                 lineNumbers.append(i);
-                lineNumbers.append(Config.FORMATS.LINE_SEPARATOR);
+                lineNumbers.append(Config.formats.LINE_SEPARATOR);
             }
 
             //Set the component's text to the generated line numbers:
@@ -82,8 +82,8 @@ public class TextArea extends JScrollPane {
 
             lineNumbers = countLineSeparators();
 
-            setBackground(Config.COLORS.TEXT_EDITOR_BACKGROUND);
-            setForeground(Config.COLORS.TEXT_EDITOR_FOREGROUND);
+            setBackground(Config.colors.TEXT_EDITOR_BACKGROUND);
+            setForeground(Config.colors.TEXT_EDITOR_FOREGROUND);
 
             //Add a document listener that can change the line numbers when needed:
             setText("");
@@ -139,7 +139,7 @@ public class TextArea extends JScrollPane {
          * @return  Number of line separators.
          */
         private int countLineSeparators() {
-            Pattern pattern = Pattern.compile(Config.FORMATS.LINE_SEPARATOR);
+            Pattern pattern = Pattern.compile(Config.formats.LINE_SEPARATOR);
             Matcher matcher = pattern.matcher(getText());
             return (int)(matcher.results().count());
         }
@@ -176,7 +176,7 @@ public class TextArea extends JScrollPane {
 
         updateFont();
 
-        setText(Config.FORMATS.LINE_SEPARATOR);
+        setText(Config.formats.LINE_SEPARATOR);
         setText("");
 
         setViewportView(textPane);
@@ -229,7 +229,7 @@ public class TextArea extends JScrollPane {
      * Updates the font of the TextArea to the attributes (Font-family and size) that are stored within the config.
      */
     public void updateFont() {
-        Font font = new Font(Config.FONTS.TEXT_EDITOR_FONT, Font.PLAIN, Config.FONTS.TEXT_EDITOR_FONT_SIZE);
+        Font font = new Font(Config.fonts.TEXT_EDITOR_FONT, Font.PLAIN, Config.fonts.TEXT_EDITOR_FONT_SIZE);
         lineNumbers.setFont(font);
         textPane.setFont(font);
     }

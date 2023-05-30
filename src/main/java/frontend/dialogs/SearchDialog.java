@@ -7,7 +7,6 @@ import frontend.frames.main.components.EditorTab;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.jar.JarEntry;
 
 
 /**
@@ -97,13 +96,13 @@ public class SearchDialog extends JDialog {
 
         //Construct regexInput:
         regexInput = new JTextField();
-        configurationContainer.add(new JLabel(Config.STRINGS.SEARCH_WHAT));
+        configurationContainer.add(new JLabel(Config.strings.SEARCH_WHAT));
         configurationContainer.add(regexInput);
 
         //Construct radioButtons:
-        searchFile = new JRadioButton(Config.STRINGS.SEARCH_ACTIVE_TAB);
+        searchFile = new JRadioButton(Config.strings.SEARCH_ACTIVE_TAB);
         searchFile.setSelected(true);
-        searchAllFiles = new JRadioButton(Config.STRINGS.SEARCH_ALL_TABS);
+        searchAllFiles = new JRadioButton(Config.strings.SEARCH_ALL_TABS);
         searchAllFiles.setEnabled(false);
         ButtonGroup radioButtonGroup = new ButtonGroup();
         radioButtonGroup.add(searchFile);
@@ -126,7 +125,7 @@ public class SearchDialog extends JDialog {
         mainContainer.add(outputContainer);
 
         //Configure output:
-        noMatches = new JLabel(Config.STRINGS.NO_MATCHES);
+        noMatches = new JLabel(Config.strings.NO_MATCHES);
         noMatches.setVisible(false);
         JPanel noMatchesContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
         noMatchesContainer.add(noMatches);
@@ -141,23 +140,23 @@ public class SearchDialog extends JDialog {
         matchesContainer.setVisible(false);
 
         //Construct closeButton:
-        closeButton = new JButton(Config.STRINGS.CLOSE_BUTTON);
+        closeButton = new JButton(Config.strings.CLOSE_BUTTON);
         closeButton.addActionListener(e -> dispose());
         closeButtonContainer.add(closeButton);
 
         //Construct searchButton:
-        searchButton = new JButton(Config.STRINGS.SEARCH);
+        searchButton = new JButton(Config.strings.SEARCH);
         searchButton.addActionListener(e -> search());
         searchButtonContainer.add(searchButton);
 
         //Construct previousButton:
-        previousButton = new JButton(Config.STRINGS.PREVIOUS_BUTTON);
+        previousButton = new JButton(Config.strings.PREVIOUS_BUTTON);
         previousButton.addActionListener(e -> backwardsIterateThroughMatches());
         previousButton.setEnabled(false);
         searchButtonContainer.add(previousButton);
 
         //Construct nextButton:
-        nextButton = new JButton(Config.STRINGS.NEXT_BUTTON);
+        nextButton = new JButton(Config.strings.NEXT_BUTTON);
         nextButton.addActionListener(e -> forwardIterateThroughMatches());
         nextButton.setEnabled(false);
         searchButtonContainer.add(nextButton);

@@ -1,7 +1,6 @@
 package frontend.menus;
 
 import backend.config.Config;
-import backend.files.File;
 import frontend.frames.main.MainFrame;
 
 import javax.swing.*;
@@ -33,7 +32,7 @@ public class FileMenu extends JMenu {
      * @param context   MainFrame in which the FileMenu is located.
      */
     public FileMenu(MainFrame context) {
-        super(Config.STRINGS.FILE_MENU);
+        super(Config.strings.FILE_MENU);
 
         this.context = context;
 
@@ -47,13 +46,13 @@ public class FileMenu extends JMenu {
      */
     public void create() {
         //Configure open:
-        open = new JMenuItem(Config.STRINGS.OPEN_FILE);
+        open = new JMenuItem(Config.strings.OPEN_FILE);
         open.addActionListener(e -> context.openFile());
         open.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + O.
         add(open);
 
         //Configure newFile:
-        newFile = new JMenuItem(Config.STRINGS.NEW_FILE);
+        newFile = new JMenuItem(Config.strings.NEW_FILE);
         newFile.addActionListener(e -> context.newFile());
         newFile.setAccelerator(KeyStroke.getKeyStroke('N', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + N.
         add(newFile);
@@ -61,25 +60,25 @@ public class FileMenu extends JMenu {
         add(new JSeparator());
 
         //Configure save:
-        save = new JMenuItem(Config.STRINGS.SAVE);
+        save = new JMenuItem(Config.strings.SAVE);
         save.addActionListener(e -> context.getTabs().saveActiveTab());
         save.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + S.
         add(save);
 
         //Configure saveAs:
-        saveAs = new JMenuItem(Config.STRINGS.SAVE_AS);
+        saveAs = new JMenuItem(Config.strings.SAVE_AS);
         saveAs.addActionListener(e -> context.saveFileAs());
         add(saveAs);
 
         //Configure exportToHTML:
-        exportToHTML = new JMenuItem(Config.STRINGS.EXPORT_TO_HTML);
+        exportToHTML = new JMenuItem(Config.strings.EXPORT_TO_HTML);
         exportToHTML.addActionListener(e -> context.getTabs().exportActiveTabToHTML());
         add(exportToHTML);
 
         add(new JSeparator());
 
         //Configure exit:
-        exit = new JMenuItem(Config.STRINGS.EXIT);
+        exit = new JMenuItem(Config.strings.EXIT);
         exit.addActionListener(e -> context.dispose());
         exit.setAccelerator(KeyStroke.getKeyStroke('s', InputEvent.ALT_DOWN_MASK)); //Menu item is triggered with ALT + F4.
         add(exit);

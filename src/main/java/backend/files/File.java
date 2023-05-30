@@ -58,6 +58,20 @@ public class File {
         return extension;
     }
 
+    /**
+     * Returns the file's name with its extension in the following format:
+     *  "<name>.<extension>"
+     *
+     * @return  Name with the extension.
+     */
+    public String getNameWithExtension() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name);
+        builder.append(".");
+        builder.append(extension);
+        return builder.toString();
+    }
+
 
     /**
      * This method loads the contents of this file and returns them as String. If the file does not exist, a
@@ -72,7 +86,7 @@ public class File {
             //Read the file line by line:
             while (fileReader.ready()) {
                 fileContent.append(fileReader.readLine());
-                fileContent.append(Config.FORMATS.LINE_SEPARATOR);
+                fileContent.append(Config.formats.LINE_SEPARATOR);
             }
             fileReader.close();
             return fileContent.toString();

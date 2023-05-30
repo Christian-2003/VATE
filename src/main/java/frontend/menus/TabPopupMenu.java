@@ -45,17 +45,17 @@ public class TabPopupMenu extends JPopupMenu {
      */
     private void create() {
         //Construct closeActiveTab:
-        closeActiveTab = new JMenuItem(Config.STRINGS.CLOSE_TAB);
+        closeActiveTab = new JMenuItem(Config.strings.CLOSE_TAB);
         closeActiveTab.addActionListener(e -> context.disposeActiveTab());
         add(closeActiveTab);
 
         //Configure saveActiveTab:
-        saveActiveTab = new JMenuItem(Config.STRINGS.SAVE_TAB);
+        saveActiveTab = new JMenuItem(Config.strings.SAVE_TAB);
         saveActiveTab.addActionListener(e -> context.saveActiveTab());
         add(saveActiveTab);
 
         //Construct showInExplorer:
-        showInExplorer = new JMenuItem(Config.STRINGS.SHOW_TAB_IN_EXPLORER);
+        showInExplorer = new JMenuItem(Config.strings.SHOW_TAB_IN_EXPLORER);
         showInExplorer.addActionListener(e -> context.showActiveTabInExplorer());
         add(showInExplorer);
 

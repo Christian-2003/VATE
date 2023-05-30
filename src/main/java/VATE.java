@@ -14,21 +14,13 @@ public class VATE {
 
     public static void main(String[] args) {
         try {
-            Config.LOAD_CONFIG();
+            Config.loadConfig();
         }
         catch (IOException e) {
             //Could not load config: Do nothing as new config is created...
         }
 
         MainFrame mainFrame = new MainFrame(args);
-
-        try {
-            Config.SAVE_CONFIG();
-        }
-        catch (IOException e) {
-            //Could not save config:
-            //What am I supposed to do now? Do nothing instead.
-        }
     }
 
 }

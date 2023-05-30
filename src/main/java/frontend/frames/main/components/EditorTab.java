@@ -1,13 +1,9 @@
 package frontend.frames.main.components;
 
 import backend.config.Config;
-import frontend.menus.TabPopupMenu;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -159,7 +155,7 @@ public class EditorTab extends Tab {
     public boolean dispose() {
         if (unsavedChanges) {
             //There are unsaved changes:
-            int option = JOptionPane.showConfirmDialog(this, Config.STRINGS.ASK_FOR_CHANGES_TO_BE_SAVED);
+            int option = JOptionPane.showConfirmDialog(this, Config.strings.ASK_FOR_CHANGES_TO_BE_SAVED);
             if (option == JOptionPane.NO_OPTION) {
                 //Discard unsaved changes:
                 unsavedChanges = false;

@@ -2,7 +2,6 @@ package frontend.frames.main;
 
 import backend.config.Config;
 import backend.files.File;
-import frontend.frames.main.components.EditorTab;
 import frontend.frames.main.components.Tab;
 import frontend.frames.main.components.TabbedPane;
 import frontend.menus.EditMenu;
@@ -69,7 +68,7 @@ public class MainFrame extends JFrame {
     private void create(String[] paths) {
         //Set LookAndFeel for this MainFrame:
         try {
-            if (Config.SETTINGS.USE_SYSTEM_LOOK_AND_FEEL) {
+            if (Config.settings.USE_SYSTEM_LOOK_AND_FEEL) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
         }
@@ -91,7 +90,7 @@ public class MainFrame extends JFrame {
         tabs.updateTabbedPane(); //Enable / Disable menu items based on needs.
 
         //Open files if necessary:
-        if (paths != null) {
+        if (paths != null && paths.length != 0) {
             //Open passed files as tabs:
             for (String current : paths) {
                 File newFile = new File(current);
@@ -100,9 +99,9 @@ public class MainFrame extends JFrame {
                 }
             }
         }
-        else if (Config.SETTINGS.LOAD_PREVIOUS_FILES_WHEN_OPENED) {
+        else if (Config.settings.LOAD_PREVIOUS_FILES_WHEN_OPENED) {
             //Open previously opened files as tabs:
-            for (String current : Config.SETTINGS.PREVIOUSLY_OPENED_FILES) {
+            for (String current : Config.settings.PREVIOUSLY_OPENED_FILES) {
                 File newFile = new File(current);
                 if (newFile.exists()) {
                     tabs.addTab(current);
@@ -146,13 +145,13 @@ public class MainFrame extends JFrame {
      */
     public void newFile() {
         JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showDialog(this, Config.STRINGS.CREATE_FILE_BUTTON);
+        int option = fileChooser.showDialog(this, Config.strings.CREATE_FILE_BUTTON);
         if (option == JFileChooser.APPROVE_OPTION) {
             //Create the selected file:
             File newFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
             if (newFile.exists()) {
                 //The entered file already exists:
-                option = JOptionPane.showConfirmDialog(this, Config.STRINGS.FILE_ALREADY_EXISTS);
+                option = JOptionPane.showConfirmDialog(this, Config.strings.FILE_ALREADY_EXISTS);
                 if (option == JOptionPane.NO_OPTION) {
                     //Do not create file:
                     return;
@@ -165,7 +164,7 @@ public class MainFrame extends JFrame {
             }
             catch (IOException e) {
                 //Error: Could not create file:
-                JOptionPane.showMessageDialog(this, e.getMessage(), Config.STRINGS.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, e.getMessage(), Config.strings.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -182,7 +181,7 @@ public class MainFrame extends JFrame {
             File newFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
             if (newFile.exists()) {
                 //The entered file already exists:
-                option = JOptionPane.showConfirmDialog(this, Config.STRINGS.FILE_ALREADY_EXISTS);
+                option = JOptionPane.showConfirmDialog(this, Config.strings.FILE_ALREADY_EXISTS);
                 if (option == JOptionPane.NO_OPTION) {
                     //Do not create file:
                     return;
@@ -200,7 +199,7 @@ public class MainFrame extends JFrame {
     @Override
     public void dispose() {
         if (tabs.hasUnsavedChanges()) {
-            int option = JOptionPane.showConfirmDialog(this, Config.STRINGS.UNSAVED_CHANGES);
+            int option = JOptionPane.showConfirmDialog(this, Config.strings.UNSAVED_CHANGES);
             if (option == JOptionPane.YES_OPTION) {
                 //Save changes:
                 tabs.saveAllTabs();
@@ -210,10 +209,20 @@ public class MainFrame extends JFrame {
                 return;
             }
         }
+
         //Save currently opened tabs to config:
-        Config.SETTINGS.PREVIOUSLY_OPENED_FILES.clear();
+        Config.settings.PREVIOUSLY_OPENED_FILES.clear();
         for (int i = 0; i < tabs.getTabCount(); i++) {
-            Config.SETTINGS.PREVIOUSLY_OPENED_FILES.add(((Tab)tabs.getComponentAt(i)).getFile().getPath());
+            Config.settings.PREVIOUSLY_OPENED_FILES.add(((Tab)tabs.getComponentAt(i)).getFile().getPath());
+        }
+
+        //Save the config:
+        try {
+            Config.saveConfig();
+        }
+        catch (IOException e) {
+            //Could not save config:
+            //What am I supposed to do now? Do nothing instead.
         }
         super.dispose();
     }

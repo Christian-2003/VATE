@@ -1,6 +1,5 @@
 package backend.config;
 
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -9,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+
 
 /**
  * Stores all relevant configurable information for VATE.
@@ -21,37 +21,37 @@ public class Config {
     /**
      * Stores the filepath for the config.
      */
-    private static String CONFIG_FILE_PATH = "vate.config";
+    private static String configFilePath = "vate.config";
 
     /**
      * Stores all colors for VATE.
      * (i.e. background colors, text colors, ...)
      */
-    public static Colors COLORS;
+    public static Colors colors = new Colors();
 
     /**
      * Stores all formats for VATE.
      * (i.e. line separators, date formats, ...)
      */
-    public static Formats FORMATS;
+    public static Formats formats = new Formats();
 
     /**
      * Stores all Strings for VATE.
      * (i.e. "Open", "Save", "Cancel", "No file type", ...)
      */
-    public static Strings STRINGS;
+    public static Strings strings = new Strings();
 
     /**
      * Stores all Font-related information for VATE.
      * (i.e. Font families, font sizes, ...)
      */
-    public static Fonts FONTS;
+    public static Fonts fonts = new Fonts();
 
     /**
      * Stores all settings for VATE.
      * (i.e. whether the default LookAndFeel shall be used, ...)
      */
-    public static Settings SETTINGS;
+    public static Settings settings = new Settings();
 
 
     /**
@@ -59,18 +59,18 @@ public class Config {
      *
      * @throws IOException  Some error with the config file.
      */
-    public static void SAVE_CONFIG() throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(CONFIG_FILE_PATH))) {
+    public static void saveConfig() throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFilePath))) {
             GsonBuilder builder = new GsonBuilder();
             builder.excludeFieldsWithModifiers(Modifier.TRANSIENT);
             Gson gson = builder.create();
-            writer.write(gson.toJson(COLORS, Colors.class));
-            writer.write(FORMATS.LINE_SEPARATOR);
-            writer.write(gson.toJson(FORMATS, Formats.class));
-            writer.write(FORMATS.LINE_SEPARATOR);
-            writer.write(gson.toJson(FONTS, Fonts.class));
-            writer.write(FORMATS.LINE_SEPARATOR);
-            writer.write(gson.toJson(SETTINGS, Settings.class));
+            //writer.write(gson.toJson(COLORS, Colors.class));
+            //writer.write("\n");
+            writer.write(gson.toJson(formats));
+            writer.write("\n");
+            writer.write(gson.toJson(fonts, Fonts.class));
+            writer.write("\n");
+            writer.write(gson.toJson(settings, Settings.class));
         }
         catch (IOException e) {
             //Error: Some IO Error occurred:
@@ -84,23 +84,23 @@ public class Config {
      *
      * @throws IOException  Some error with the config file.
      */
-    public static void LOAD_CONFIG() throws IOException {
-        if (!Files.exists(Paths.get(CONFIG_FILE_PATH))) {
+    public static void loadConfig() throws IOException {
+        if (!Files.exists(Paths.get(configFilePath))) {
             //Config file does not exist yet:
-            SAVE_CONFIG(); //Create a new config file.
+            saveConfig(); //Create a new config file.
             return;
         }
 
         //Read config file if available:
         ArrayList<String> lines = new ArrayList<String>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILE_PATH))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(configFilePath))) {
             while (reader.ready()) {
                 lines.add(reader.readLine());
             }
         }
         catch (IOException e) {
             //Error: Some IO Error occurred:
-            SAVE_CONFIG(); //Save config with default values.
+            saveConfig(); //Save config with default values.
             return;
         }
 
@@ -112,16 +112,13 @@ public class Config {
             for (int i = 0; i < lines.size(); i++) {
                 switch (i) {
                     case 0:
-                        COLORS = gson.fromJson(lines.get(i), Colors.class);
+                        formats = gson.fromJson(lines.get(i), Formats.class);
                         break;
                     case 1:
-                        FORMATS = gson.fromJson(lines.get(i), Formats.class);
+                        fonts = gson.fromJson(lines.get(i), Fonts.class);
                         break;
                     case 2:
-                        FONTS = gson.fromJson(lines.get(i), Fonts.class);
-                        break;
-                    case 3:
-                        SETTINGS = gson.fromJson(lines.get(i), Settings.class);
+                        settings = gson.fromJson(lines.get(i), Settings.class);
                         break;
                     default:
                         return;
@@ -130,7 +127,7 @@ public class Config {
         }
         catch (JsonSyntaxException e) {
             //Error: Incorrect JSON:
-            SAVE_CONFIG(); //Create a new config.
+            saveConfig(); //Create a new config.
         }
     }
 

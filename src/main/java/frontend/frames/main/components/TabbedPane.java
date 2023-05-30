@@ -7,7 +7,6 @@ import frontend.dialogs.SearchDialog;
 import frontend.frames.main.MainFrame;
 import frontend.menus.TabPopupMenu;
 import javax.swing.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -54,7 +53,7 @@ public class TabbedPane extends JTabbedPane implements MouseListener {
         setTabPlacement(JTabbedPane.TOP);
         setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        setFont(getFont().deriveFont((float)Config.FONTS.PROGRAM_FONT_SIZE));
+        setFont(getFont().deriveFont((float)Config.fonts.PROGRAM_FONT_SIZE));
 
         //Add MouseListener to open a Popup menu on right-click:
         popupMenu = new TabPopupMenu(this);
@@ -102,13 +101,13 @@ public class TabbedPane extends JTabbedPane implements MouseListener {
             if (getComponentAt(i) instanceof Tab && ((Tab)getComponentAt(i)).getFile().getPath().equals(path)) {
                 //Path already opened:
                 setSelectedIndex(i); //Show opened file.
-                JOptionPane.showMessageDialog(this, Config.STRINGS.FILE_ALREADY_OPENED);
+                JOptionPane.showMessageDialog(this, Config.strings.FILE_ALREADY_OPENED);
                 return false;
             }
         }
         //Open file:
         EditorTab newTab = new EditorTab(path);
-        addTab(newTab.getFile().getName(), newTab);
+        addTab(newTab.getFile().getNameWithExtension(), newTab);
         setSelectedComponent(newTab); //Show opened tab.
 
         return true;
@@ -247,13 +246,13 @@ public class TabbedPane extends JTabbedPane implements MouseListener {
     public void exportActiveTabToHTML() {
         //Ask the user to enter a file to which to save the HTML:
         JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showDialog(this, Config.STRINGS.CREATE_FILE_BUTTON);
+        int option = fileChooser.showDialog(this, Config.strings.CREATE_FILE_BUTTON);
         if (option == JFileChooser.APPROVE_OPTION) {
             //Create the selected file:
             File newFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
             if (newFile.exists()) {
                 //The entered file already exists:
-                option = JOptionPane.showConfirmDialog(this, Config.STRINGS.FILE_ALREADY_EXISTS);
+                option = JOptionPane.showConfirmDialog(this, Config.strings.FILE_ALREADY_EXISTS);
                 if (option == JOptionPane.NO_OPTION) {
                     //Do not create file:
                     return;
@@ -266,12 +265,12 @@ public class TabbedPane extends JTabbedPane implements MouseListener {
                 }
                 else {
                     //Cannot export opened file:
-                    JOptionPane.showMessageDialog(this, Config.STRINGS.FILE_NOT_SUITABLE_FOR_EXPORT, Config.STRINGS.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, Config.strings.FILE_NOT_SUITABLE_FOR_EXPORT, Config.strings.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
                 }
             }
             catch (IOException e) {
                 //Error: Could not create file:
-                JOptionPane.showMessageDialog(this, e.getMessage(), Config.STRINGS.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, e.getMessage(), Config.strings.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
             }
         }
     }

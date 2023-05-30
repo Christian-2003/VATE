@@ -2,11 +2,8 @@ package frontend.frames.main.components;
 
 import backend.config.Config;
 import backend.files.File;
-import frontend.menus.TabPopupMenu;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 
 /**
@@ -87,11 +84,11 @@ public abstract class Tab extends JPanel {
      * Instantiates and constructs the Tab.
      */
     private void create() {
-        title = file.getName();
+        title = file.getNameWithExtension();
         unsavedChanges = false;
 
-        setBackground(Config.COLORS.TEXT_EDITOR_BACKGROUND);
-        setForeground(Config.COLORS.TEXT_EDITOR_FOREGROUND);
+        setBackground(Config.colors.TEXT_EDITOR_BACKGROUND);
+        setForeground(Config.colors.TEXT_EDITOR_FOREGROUND);
     }
 
 
