@@ -8,6 +8,7 @@ import frontend.menus.EditMenu;
 import frontend.menus.FileMenu;
 
 import javax.swing.*;
+import javax.tools.Tool;
 import java.awt.*;
 import java.io.IOException;
 
@@ -109,7 +110,17 @@ public class MainFrame extends JFrame {
             }
         }
 
-        setSize(1024, 512);
+        //Set size:
+        if (Config.settings.usePreviousDimensionWhenCreated && Config.settings.previousHeight != -1 && Config.settings.previousWidth != -1) {
+            //Use previous dimensions:
+            setSize(Config.settings.previousWidth, Config.settings.previousHeight);
+        }
+        else {
+            //Use standard size:
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            setSize((int)(screenSize.getWidth() * 0.6), (int)(screenSize.getHeight() * 0.6));
+        }
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
     }
@@ -214,6 +225,13 @@ public class MainFrame extends JFrame {
         Config.settings.PREVIOUSLY_OPENED_FILES.clear();
         for (int i = 0; i < tabs.getTabCount(); i++) {
             Config.settings.PREVIOUSLY_OPENED_FILES.add(((Tab)tabs.getComponentAt(i)).getFile().getPath());
+        }
+
+        //Save the current dimension:
+        if (getExtendedState() != JFrame.MAXIMIZED_BOTH) {
+            //MainFrame is not in fullscreen, save current dimensions:
+            Config.settings.previousWidth = getWidth();
+            Config.settings.previousHeight = getHeight();
         }
 
         //Save the config:

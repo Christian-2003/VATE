@@ -165,6 +165,7 @@ public class SearchDialog extends JDialog {
         add(buttonContainer, BorderLayout.SOUTH);
         add(mainContainer, BorderLayout.NORTH);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setTitle(Config.strings.SEARCH_DIALOG_TITLE);
         setSize(512, 256);
         setVisible(true);
     }

@@ -1,5 +1,6 @@
 package backend.config;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -21,5 +22,20 @@ public class Settings {
      * Stores the paths to all previously opened files.
      */
     public static ArrayList<String> PREVIOUSLY_OPENED_FILES = new ArrayList<>();
+
+    /**
+     * Stores whether VATE shall be instantiated with the last dimensions.
+     */
+    public static boolean usePreviousDimensionWhenCreated = true;
+
+    /**
+     * Stores the last width of the main frame.
+     */
+    public static int previousWidth = -1;
+
+    /**
+     * Stores the last height of the main frame.
+     */
+    public static int previousHeight = -1;
 
 }
