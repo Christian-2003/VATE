@@ -117,6 +117,11 @@ public class Strings {
     public static String SEARCH = "Search";
 
     /**
+     * Stores the String for the menu item to search and replace a regex in a {@linkplain frontend.menus.EditMenu}.
+     */
+    public static String searchAndReplace = "Search and Replace";
+
+    /**
      * Stores the title for the dialog to configure the export to HTML in a {@linkplain frontend.dialogs.ExportToHtmlDialog}.
      */
     public static String EXPORT_TO_HTML_TITLE = "Configure Export to HTML";

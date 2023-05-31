@@ -4,6 +4,7 @@ import backend.config.Config;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.awt.*;
@@ -262,6 +263,29 @@ public class TextArea extends JScrollPane {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Replaces part of the displayed text with the passed replacement.
+     * Beginning at the passed index position, the specified number of characters (passed as length) will be removed.
+     * In their place, the replacement is then inserted.
+     *
+     * @param position      Position at which the replacement shall be inserted.
+     * @param length        Number of characters to be removed.
+     * @param replacement   Replacement to be inserted.
+     */
+    public void replace(int position, int length, String replacement) {
+        int currentCaretPosition = textPane.getCaretPosition();
+        try {
+            textPane.getDocument().remove(position, length);
+            textPane.getDocument().insertString(position, replacement, null);
+            System.out.println("DEBUG: Replaced at " + position + " of length " + length + " with \"" + replacement + "\".");
+        }
+        catch (BadLocationException e) {
+            //Could not remove the text:
+            return;
+        }
+
     }
 
 }

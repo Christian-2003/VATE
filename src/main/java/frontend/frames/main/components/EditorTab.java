@@ -84,6 +84,38 @@ public class EditorTab extends Tab {
     }
 
     /**
+     * Replaces part of the displayed text with the passed replacement.
+     * Beginning at the passed index position, the specified number of characters (passed as length) will be removed.
+     * In their place, the replacement is then inserted.
+     *
+     * @param position      Position at which the replacement shall be inserted.
+     * @param length        Number of characters to be removed.
+     * @param replacement   Replacement to be inserted.
+     */
+    public void replace(int position, int length, String replacement) {
+        textArea.replace(position, length, replacement);
+    }
+
+    /**
+     * Replaces part of the displayed text with the passed replacement.
+     * Beginning at the passed index position, the specified number of characters (passed as length) will be removed.
+     * In their place, the replacement is then inserted.
+     * This is repeated for every element in the ArrayList positions.
+     *
+     * <br><b><i>IMPORTANT:</i> Consider the change for each position due to eventual difference in {@code length}
+     * and the length of the {@code replacement}!!!</b>
+     *
+     * @param positions     ArrayList of the positions at which the replacement shall be inserted.
+     * @param length        Number of characters to be removed.
+     * @param replacement   Replacement to be inserted.
+     */
+    public void replaceAll(ArrayList<Integer> positions, int length, String replacement) {
+        for (int current : positions) {
+            textArea.replace(current, length, replacement);
+        }
+    }
+
+    /**
      * Marks text at the specified position for the specified length.
      *
      * @param position  Index of the first character to be marked.

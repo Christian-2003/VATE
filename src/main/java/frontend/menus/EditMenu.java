@@ -16,7 +16,7 @@ public class EditMenu extends JMenu {
     /**
      * Menu items for the EditMenu.
      */
-    private JMenuItem search;
+    private JMenuItem search, searchAndReplace;
 
 
     /**
@@ -42,6 +42,11 @@ public class EditMenu extends JMenu {
         search.addActionListener(e -> context.getTabs().search());
         search.setAccelerator(KeyStroke.getKeyStroke('F', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + F.
         add(search);
+
+        //Configure searchAndReplace:
+        searchAndReplace = new JMenuItem(Config.strings.searchAndReplace);
+        searchAndReplace.addActionListener(e -> context.getTabs().searchAndReplace());
+        add(searchAndReplace);
     }
 
 
