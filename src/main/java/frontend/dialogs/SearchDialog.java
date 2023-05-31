@@ -333,7 +333,7 @@ public class SearchDialog extends JDialog {
             //Cannot replace:
             return;
         }
-        search(0);
+        search(currentMatch);
 
         String replacement = replacementInput.getText();
         int length = regexInput.getText().length();
@@ -357,7 +357,7 @@ public class SearchDialog extends JDialog {
             //Cannot replace:
             return;
         }
-        search(0);
+        search(currentMatch);
 
         String replacement = replacementInput.getText();
         int length = regexInput.getText().length();
