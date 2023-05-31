@@ -177,6 +177,31 @@ public class Strings {
     public static String SEARCH_ALL_TABS = "Search all tabs";
 
     /**
+     * Allows the user to replace the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String enableSearchReplacement = "Enable Replacement";
+
+    /**
+     * Allows the user to replace the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String searchReplacementHint = "Replace with";
+
+    /**
+     * Allows the user to replace the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String replaceButton = "Replace";
+
+    /**
+     * Allows the user to replace all the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String replaceAllButton = "Replace All";
+
+    /**
+     * Allows the user to swap the replacement with the searched regex in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String swapReplaceAndRegexButton = "Swap Search and Replace";
+
+    /**
      * Shows the user that there are no matches for a regex in {@linkplain frontend.dialogs.SearchDialog}.
      */
     public static String NO_MATCHES = "No matches";

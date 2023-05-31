@@ -103,6 +103,7 @@ public class EditorTab extends Tab {
     public boolean save() {
         try {
             file.save(textArea.getText());
+            unsavedChanges = false;
         }
         catch (IOException e) {
             //Error: Could not save file:

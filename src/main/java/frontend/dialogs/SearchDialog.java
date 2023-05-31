@@ -25,7 +25,7 @@ public class SearchDialog extends JDialog {
     /**
      * Buttons for the dialog.
      */
-    private JButton closeButton, searchButton, nextButton, previousButton;
+    private JButton closeButton, searchButton, nextButton, previousButton, replaceButton, replaceAllButton, swapReplaceWithRegex;
 
     /**
      * Radio buttons for the dialog.
@@ -35,7 +35,7 @@ public class SearchDialog extends JDialog {
     /**
      * Text inputs for the dialog.
      */
-    private JTextField regexInput;
+    private JTextField regexInput, replacementInput;
 
     /**
      * Labels for the dialog.
@@ -43,9 +43,14 @@ public class SearchDialog extends JDialog {
     private JLabel numberOfMatches, activeMatch, noMatches;
 
     /**
+     * Checkboxes for the dialog.
+     */
+    private JCheckBox enableReplacementCheckbox;
+
+    /**
      * JPanel contains the display of the number of matches.
      */
-    JPanel matchesContainer;
+    private JPanel matchesContainer;
 
     /**
      * Stores the number of matches and the active match as integers.
@@ -61,7 +66,7 @@ public class SearchDialog extends JDialog {
     /**
      * Stores the regex that was searched by the dialog.
      */
-    String searchedRegex;
+    private String searchedRegex;
 
 
     /**
@@ -111,12 +116,44 @@ public class SearchDialog extends JDialog {
         configurationContainer.add(new JPanel()); //No component in second column.
         configurationContainer.add(searchAllFiles);
 
-        //Construct buttonContainer:
-        JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
-        JPanel searchButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        buttonContainer.add(searchButtonContainer);
-        JPanel closeButtonContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonContainer.add(closeButtonContainer);
+        //Construct replaceContainer:
+        JPanel replaceContainer = new JPanel(new GridLayout(4, 2));
+        mainContainer.add(new JSeparator());
+        mainContainer.add(replaceContainer);
+
+        //Configure enableReplacementCheckbox:
+        enableReplacementCheckbox = new JCheckBox(Config.strings.enableSearchReplacement);
+        replaceContainer.add(enableReplacementCheckbox);
+
+        //Configure replacementInput
+        replaceContainer.add(new JLabel()); //Nothing in second column.
+        JLabel replacementHintLabel = new JLabel(Config.strings.searchReplacementHint);
+        replacementHintLabel.setEnabled(false);
+        replaceContainer.add(replacementHintLabel);
+        replacementInput = new JTextField();
+        replacementInput.setEnabled(false);
+        replaceContainer.add(replacementInput);
+
+        //Configure replaceButton:
+        JPanel replaceButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        replaceButton = new JButton(Config.strings.replaceButton);
+        replaceButton.setEnabled(false);
+        replaceButtonContainer.add(replaceButton);
+        replaceContainer.add(replaceButtonContainer);
+
+        //Configure swapReplaceWithRegex:
+        JPanel swapReplaceWithRegexContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        swapReplaceWithRegex = new JButton(Config.strings.swapReplaceAndRegexButton);
+        swapReplaceWithRegex.setEnabled(false);
+        swapReplaceWithRegexContainer.add(swapReplaceWithRegex);
+        replaceContainer.add(swapReplaceWithRegexContainer);
+
+        //Configure replaceAllButton:
+        JPanel replaceAllButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        replaceAllButton = new JButton(Config.strings.replaceAllButton);
+        replaceAllButton.setEnabled(false);
+        replaceAllButtonContainer.add(replaceAllButton);
+        replaceContainer.add(replaceAllButtonContainer);
 
         //Construct outputContainer:
         JPanel outputContainer = new JPanel();
@@ -138,6 +175,13 @@ public class SearchDialog extends JDialog {
         numberOfMatches = new JLabel("" + numberOfMatchesInt);
         matchesContainer.add(numberOfMatches);
         matchesContainer.setVisible(false);
+
+        //Construct buttonContainer:
+        JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
+        JPanel searchButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonContainer.add(searchButtonContainer);
+        JPanel closeButtonContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonContainer.add(closeButtonContainer);
 
         //Construct closeButton:
         closeButton = new JButton(Config.strings.CLOSE_BUTTON);
