@@ -211,4 +211,12 @@ public class EditorTab extends Tab {
         return true;
     }
 
+    public void undo() {
+        textArea.undo();
+    }
+
+    public void redo() {
+        textArea.redo();
+    }
+
 }

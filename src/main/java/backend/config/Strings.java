@@ -122,6 +122,16 @@ public class Strings {
     public static String searchAndReplace = "Search and Replace";
 
     /**
+     * Stores the String that allows the user to undo changes.
+     */
+    public static String undo = "Undo";
+
+    /**
+     * Stores the String that allows the user to redo undone changes.
+     */
+    public static String redo = "Redo";
+
+    /**
      * Stores the title for the dialog to configure the export to HTML in a {@linkplain frontend.dialogs.ExportToHtmlDialog}.
      */
     public static String EXPORT_TO_HTML_TITLE = "Configure Export to HTML";

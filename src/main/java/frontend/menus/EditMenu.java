@@ -2,8 +2,11 @@ package frontend.menus;
 
 import backend.config.Config;
 import frontend.frames.main.MainFrame;
+import frontend.frames.main.components.EditorTab;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 
 public class EditMenu extends JMenu {
@@ -16,7 +19,7 @@ public class EditMenu extends JMenu {
     /**
      * Menu items for the EditMenu.
      */
-    private JMenuItem search, searchAndReplace;
+    private JMenuItem undo, redo, search, searchAndReplace;
 
 
     /**
@@ -37,6 +40,34 @@ public class EditMenu extends JMenu {
      * Constructs and instantiates the EditMenu.
      */
     private void create() {
+        //Configure undo:
+        undo = new JMenuItem(Config.strings.undo);
+        undo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (context.getTabs().getSelectedComponent() instanceof EditorTab) {
+                    ((EditorTab)context.getTabs().getSelectedComponent()).undo();;
+                }
+            }
+        });
+        undo.setAccelerator(KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + Z.
+        add(undo);
+
+        //Configure redo:
+        redo = new JMenuItem(Config.strings.redo);
+        redo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (context.getTabs().getSelectedComponent() instanceof EditorTab) {
+                    ((EditorTab)context.getTabs().getSelectedComponent()).redo();;
+                }
+            }
+        });
+        redo.setAccelerator(KeyStroke.getKeyStroke('Y', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + Y.
+        add(redo);
+
+        add(new JSeparator());
+
         //Configure search:
         search = new JMenuItem(Config.strings.SEARCH);
         search.addActionListener(e -> context.getTabs().search());
