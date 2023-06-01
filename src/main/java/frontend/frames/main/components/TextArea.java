@@ -4,9 +4,16 @@ import backend.config.Config;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,9 +76,97 @@ public class TextArea extends JScrollPane {
     private class TextPane extends JTextPane {
 
         /**
+         * This Java class implements a handler that handles undoable changes.
+         */
+        private class UndoHandler implements UndoableEditListener {
+
+            /**
+             * Messaged when the document has created an edit, the edit is added to the
+             * {@code unoManager}.
+             *
+             * @param e an {@code UndoableEditEvent} object
+             */
+            public void undoableEditHappened(UndoableEditEvent e) {
+                undoManager.addEdit(e.getEdit());
+                undoAction.update();
+                redoAction.update();
+            }
+
+        }
+
+        private class UndoAction extends AbstractAction {
+
+            public UndoAction() {
+                super("Undo");
+                setEnabled(false);
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    undoManager.undo();
+                }
+                catch (CannotUndoException exc) {
+                    //Do nothing...
+                }
+                update();
+                redoAction.update();
+            }
+
+            public void update() {
+                if (undoManager.canUndo()) {
+                    setEnabled(true);
+                    putValue(Action.NAME, undoManager.getUndoPresentationName());
+                }
+                else {
+                    setEnabled(false);
+                    putValue(Action.NAME, "Undo");
+                }
+            }
+        }
+
+        private class RedoAction extends AbstractAction {
+            public RedoAction() {
+                super("Redo");
+                setEnabled(false);
+            }
+
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    undoManager.redo();
+                }
+                catch (CannotRedoException exc) {
+                    //Do nothing...
+                }
+                update();
+                undoAction.update();
+            }
+
+            public void update() {
+                if (undoManager.canRedo()) {
+                    setEnabled(true);
+                    putValue(Action.NAME, undoManager.getRedoPresentationName());
+                }
+                else {
+                    setEnabled(false);
+                    putValue(Action.NAME, "Redo");
+                }
+            }
+        }
+
+
+        /**
          * Stores the number of lines within this TextPane.
          */
         private int lineNumbers;
+
+        private UndoManager undoManager;
+
+        private UndoHandler undoHandler;
+
+        private UndoAction undoAction;
+
+        private RedoAction redoAction;
 
 
         /**
@@ -81,6 +176,10 @@ public class TextArea extends JScrollPane {
             super();
 
             lineNumbers = countLineSeparators();
+            undoAction = new UndoAction();
+            redoAction = new RedoAction();
+            undoHandler = new UndoHandler();
+            undoManager = new UndoManager();
 
             setBackground(Config.colors.TEXT_EDITOR_BACKGROUND);
             setForeground(Config.colors.TEXT_EDITOR_FOREGROUND);
@@ -106,6 +205,18 @@ public class TextArea extends JScrollPane {
                     updateContext();
                 }
             });
+
+            //Add undoEditListener:
+            getDocument().addUndoableEditListener(undoHandler);
+        }
+
+
+        public void undo() {
+            undoAction.actionPerformed(null);
+        }
+
+        public void redo() {
+            redoAction.actionPerformed(null);
         }
 
 
@@ -262,6 +373,43 @@ public class TextArea extends JScrollPane {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Replaces part of the displayed text with the passed replacement.
+     * Beginning at the passed index position, the specified number of characters (passed as length) will be removed.
+     * In their place, the replacement is then inserted.
+     *
+     * @param position      Position at which the replacement shall be inserted.
+     * @param length        Number of characters to be removed.
+     * @param replacement   Replacement to be inserted.
+     */
+    public void replace(int position, int length, String replacement) {
+        int currentCaretPosition = textPane.getCaretPosition();
+        try {
+            textPane.getDocument().remove(position, length);
+            textPane.getDocument().insertString(position, replacement, null);
+        }
+        catch (BadLocationException e) {
+            //Could not remove the text:
+            return;
+        }
+
+    }
+
+
+    /**
+     * Undoes changes made to the TextArea.
+     */
+    public void undo() {
+        textPane.undo();
+    }
+
+    /**
+     * Redoes changes to the TextArea that were undone.
+     */
+    public void redo() {
+        textPane.redo();
     }
 
 }

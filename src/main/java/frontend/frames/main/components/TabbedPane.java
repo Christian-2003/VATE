@@ -122,6 +122,14 @@ public class TabbedPane extends JTabbedPane implements MouseListener {
     }
 
     /**
+     * This method lets the user search and replace a String.
+     */
+    public void searchAndReplace() {
+        SearchDialog dialog = new SearchDialog(context);
+        dialog.enableReplacement(true);
+    }
+
+    /**
      * Searches the active tab for the regex. This only works in an {@linkplain EditorTab}. If the active tab is no
      * EditorTab, null will be returned.
      *

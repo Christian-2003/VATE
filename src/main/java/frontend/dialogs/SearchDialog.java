@@ -6,6 +6,8 @@ import frontend.frames.main.components.EditorTab;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 
@@ -25,7 +27,7 @@ public class SearchDialog extends JDialog {
     /**
      * Buttons for the dialog.
      */
-    private JButton closeButton, searchButton, nextButton, previousButton;
+    private JButton closeButton, searchButton, nextButton, previousButton, replaceButton, replaceAllButton, swapReplaceWithRegex;
 
     /**
      * Radio buttons for the dialog.
@@ -35,22 +37,27 @@ public class SearchDialog extends JDialog {
     /**
      * Text inputs for the dialog.
      */
-    private JTextField regexInput;
+    private JTextField regexInput, replacementInput;
 
     /**
      * Labels for the dialog.
      */
-    private JLabel numberOfMatches, activeMatch, noMatches;
+    private JLabel numberOfMatches, activeMatch, noMatches, replacementHintLabel;
+
+    /**
+     * Checkboxes for the dialog.
+     */
+    private JCheckBox enableReplacementCheckbox;
 
     /**
      * JPanel contains the display of the number of matches.
      */
-    JPanel matchesContainer;
+    private JPanel matchesContainer;
 
     /**
      * Stores the number of matches and the active match as integers.
      */
-    private int numberOfMatchesInt, currentMatch, currentTab, currentIndexInCurrentTab;
+    private int numberOfMatchesInt, currentMatch, currentTab, currentPositionInCurrentTab;
 
     /**
      * Stores the indices for the matches (inner ArrayList) for the individual tabs (outer ArrayList).
@@ -61,7 +68,7 @@ public class SearchDialog extends JDialog {
     /**
      * Stores the regex that was searched by the dialog.
      */
-    String searchedRegex;
+    private String searchedRegex;
 
 
     /**
@@ -111,12 +118,56 @@ public class SearchDialog extends JDialog {
         configurationContainer.add(new JPanel()); //No component in second column.
         configurationContainer.add(searchAllFiles);
 
-        //Construct buttonContainer:
-        JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
-        JPanel searchButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        buttonContainer.add(searchButtonContainer);
-        JPanel closeButtonContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonContainer.add(closeButtonContainer);
+        //Construct replaceContainer:
+        JPanel replaceContainer = new JPanel(new GridLayout(4, 2));
+        mainContainer.add(new JSeparator());
+        mainContainer.add(replaceContainer);
+
+        //Configure enableReplacementCheckbox:
+        enableReplacementCheckbox = new JCheckBox(Config.strings.enableSearchReplacement);
+        enableReplacementCheckbox.addActionListener(e -> enableReplacement(enableReplacementCheckbox.isSelected()));
+        replaceContainer.add(enableReplacementCheckbox);
+
+        //Configure replacementInput
+        replaceContainer.add(new JLabel()); //Nothing in second column.
+        replacementHintLabel = new JLabel(Config.strings.searchReplacementHint);
+        replacementHintLabel.setEnabled(false);
+        replaceContainer.add(replacementHintLabel);
+        replacementInput = new JTextField();
+        replacementInput.setEnabled(false);
+        replaceContainer.add(replacementInput);
+
+        //Configure replaceButton:
+        JPanel replaceButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        replaceButton = new JButton(Config.strings.replaceButton);
+        replaceButton.addActionListener(e -> replace());
+        replaceButton.setEnabled(false);
+        replaceButtonContainer.add(replaceButton);
+        replaceContainer.add(replaceButtonContainer);
+
+        //Configure swapReplaceWithRegex:
+        JPanel swapReplaceWithRegexContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        swapReplaceWithRegex = new JButton(Config.strings.swapReplaceAndRegexButton);
+        swapReplaceWithRegex.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String replacement = replacementInput.getText();
+                String regex = regexInput.getText();
+                regexInput.setText(replacement);
+                replacementInput.setText(regex);
+            }
+        });
+        swapReplaceWithRegex.setEnabled(false);
+        swapReplaceWithRegexContainer.add(swapReplaceWithRegex);
+        replaceContainer.add(swapReplaceWithRegexContainer);
+
+        //Configure replaceAllButton:
+        JPanel replaceAllButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        replaceAllButton = new JButton(Config.strings.replaceAllButton);
+        replaceAllButton.addActionListener(e -> replaceAll());
+        replaceAllButton.setEnabled(false);
+        replaceAllButtonContainer.add(replaceAllButton);
+        replaceContainer.add(replaceAllButtonContainer);
 
         //Construct outputContainer:
         JPanel outputContainer = new JPanel();
@@ -139,6 +190,13 @@ public class SearchDialog extends JDialog {
         matchesContainer.add(numberOfMatches);
         matchesContainer.setVisible(false);
 
+        //Construct buttonContainer:
+        JPanel buttonContainer = new JPanel(new GridLayout(1, 2));
+        JPanel searchButtonContainer = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonContainer.add(searchButtonContainer);
+        JPanel closeButtonContainer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonContainer.add(closeButtonContainer);
+
         //Construct closeButton:
         closeButton = new JButton(Config.strings.CLOSE_BUTTON);
         closeButton.addActionListener(e -> dispose());
@@ -146,7 +204,7 @@ public class SearchDialog extends JDialog {
 
         //Construct searchButton:
         searchButton = new JButton(Config.strings.SEARCH);
-        searchButton.addActionListener(e -> search());
+        searchButton.addActionListener(e -> search(0));
         searchButtonContainer.add(searchButton);
 
         //Construct previousButton:
@@ -161,20 +219,21 @@ public class SearchDialog extends JDialog {
         nextButton.setEnabled(false);
         searchButtonContainer.add(nextButton);
 
-
         add(buttonContainer, BorderLayout.SOUTH);
         add(mainContainer, BorderLayout.NORTH);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setTitle(Config.strings.SEARCH_DIALOG_TITLE);
-        setSize(512, 256);
+        setSize(512, 300);
         setVisible(true);
     }
 
 
     /**
      * Searches the regex in VATE.
+     *
+     * @param firstMatchToHighlight First match that shall be highlighted in the editor.
      */
-    private void search() {
+    private void search(int firstMatchToHighlight) {
         indices.clear();
         searchedRegex = regexInput.getText();
         if (searchAllFiles.isSelected()) {
@@ -197,7 +256,6 @@ public class SearchDialog extends JDialog {
         //Update the dialog:
         currentMatch = 0;
         currentTab = 0;
-        currentIndexInCurrentTab = 0;
         if (numberOfMatchesInt > 1) {
             nextButton.setEnabled(true);
             previousButton.setEnabled(true);
@@ -221,11 +279,14 @@ public class SearchDialog extends JDialog {
         activeMatch.setText("" + (currentMatch + 1));
 
         //Mark the first match:
-        currentMatch = -1;
+        currentMatch = firstMatchToHighlight - 1;
         forwardIterateThroughMatches();
     }
 
 
+    /**
+     * Iterates forwards through the matches.
+     */
     private void forwardIterateThroughMatches() {
         //Set focus to textArea:
         if (++currentMatch > indices.get(0).size() - 1) {
@@ -236,6 +297,9 @@ public class SearchDialog extends JDialog {
         activeMatch.setText("" + (currentMatch + 1));
     }
 
+    /**
+     * Iterates backwards through the matches.
+     */
     private void backwardsIterateThroughMatches() {
         if (--currentMatch < 0) {
             //Start all over again:
@@ -243,6 +307,76 @@ public class SearchDialog extends JDialog {
         }
         ((EditorTab)context.getTabs().getSelectedComponent()).markText(indices.get(currentTab).get(currentMatch), searchedRegex.length());
         activeMatch.setText("" + (currentMatch + 1));
+    }
+
+
+    /**
+     * Enables / Disables the replacement options in this dialog.
+     *
+     * @param enabled   Whether replacement shall be enabled / disabled.
+     */
+    public void enableReplacement(boolean enabled) {
+        enableReplacementCheckbox.setSelected(enabled);
+        replacementHintLabel.setEnabled(enabled);
+        replacementInput.setEnabled(enabled);
+        replaceButton.setEnabled(enabled);
+        replaceAllButton.setEnabled(enabled);
+        swapReplaceWithRegex.setEnabled(enabled);
+    }
+
+
+    /**
+     * Replaces the found regex with the entered replacement.
+     */
+    private void replace() {
+        if (indices == null || indices.size() < 1 || indices.get(0).size() < 1) {
+            //Cannot replace:
+            return;
+        }
+        search(currentMatch);
+
+        String replacement = replacementInput.getText();
+        int length = regexInput.getText().length();
+        int currentPosition = indices.get(0).get(currentMatch);
+        Component currentComponent = context.getTabs().getSelectedComponent();
+        if (currentComponent instanceof EditorTab) {
+            //Can replace:
+            EditorTab tab = (EditorTab)currentComponent;
+            tab.replace(currentPosition, length, replacement);
+        }
+
+        //Adapt the other indices:
+        search(currentMatch);
+    }
+
+    /**
+     * Replaces all regex occurrences with the passed replacement.
+     */
+    private void replaceAll() {
+        if (indices == null || indices.size() < 1 || indices.get(0).size() < 1) {
+            //Cannot replace:
+            return;
+        }
+        search(currentMatch);
+
+        String replacement = replacementInput.getText();
+        int length = regexInput.getText().length();
+        ArrayList<Integer> positions = new ArrayList<Integer>(indices.get(0));
+        //Change indices to match new indices after each replacement:
+        int positionDifference = replacement.length() - length;
+        for (int i = 0; i < positions.size(); i++) {
+            positions.set(i, positions.get(i) + i * positionDifference);
+        }
+
+        Component currentComponent = context.getTabs().getSelectedComponent();
+        if (currentComponent instanceof EditorTab) {
+            //Can replace:
+            EditorTab tab = (EditorTab)currentComponent;
+            tab.replaceAll(positions, length, replacement);
+        }
+
+        //Adapt the other indices:
+        search(currentMatch);
     }
 
 

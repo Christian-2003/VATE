@@ -5,6 +5,7 @@
 !LICENSE.txt
 *.TXT
 config.conf
+vate.config
 launch4jconfig.xml
 
 

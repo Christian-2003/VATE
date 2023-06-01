@@ -117,6 +117,21 @@ public class Strings {
     public static String SEARCH = "Search";
 
     /**
+     * Stores the String for the menu item to search and replace a regex in a {@linkplain frontend.menus.EditMenu}.
+     */
+    public static String searchAndReplace = "Search and Replace";
+
+    /**
+     * Stores the String that allows the user to undo changes.
+     */
+    public static String undo = "Undo";
+
+    /**
+     * Stores the String that allows the user to redo undone changes.
+     */
+    public static String redo = "Redo";
+
+    /**
      * Stores the title for the dialog to configure the export to HTML in a {@linkplain frontend.dialogs.ExportToHtmlDialog}.
      */
     public static String EXPORT_TO_HTML_TITLE = "Configure Export to HTML";
@@ -175,6 +190,31 @@ public class Strings {
      * Asks the user to search all tabs for a regex in {@linkplain frontend.dialogs.SearchDialog}.
      */
     public static String SEARCH_ALL_TABS = "Search all tabs";
+
+    /**
+     * Allows the user to replace the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String enableSearchReplacement = "Enable Replacement";
+
+    /**
+     * Allows the user to replace the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String searchReplacementHint = "Replace with";
+
+    /**
+     * Allows the user to replace the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String replaceButton = "Replace";
+
+    /**
+     * Allows the user to replace all the searched contents with another String in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String replaceAllButton = "Replace All";
+
+    /**
+     * Allows the user to swap the replacement with the searched regex in {@linkplain frontend.dialogs.SearchDialog}.
+     */
+    public static String swapReplaceAndRegexButton = "Swap Search and Replace";
 
     /**
      * Shows the user that there are no matches for a regex in {@linkplain frontend.dialogs.SearchDialog}.
