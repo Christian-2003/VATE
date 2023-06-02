@@ -188,7 +188,7 @@ public class EditorTab extends Tab {
     public boolean dispose() {
         if (unsavedChanges) {
             //There are unsaved changes:
-            int option = JOptionPane.showConfirmDialog(this, Config.strings.ASK_FOR_CHANGES_TO_BE_SAVED);
+            int option = JOptionPane.showConfirmDialog(this, Config.strings.askForChangesToBeSaved);
             if (option == JOptionPane.NO_OPTION) {
                 //Discard unsaved changes:
                 unsavedChanges = false;
