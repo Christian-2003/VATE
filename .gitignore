@@ -7,6 +7,7 @@
 config.conf
 vate.config
 launch4jconfig.xml
+exportToHTML/
 
 
 ##############################
