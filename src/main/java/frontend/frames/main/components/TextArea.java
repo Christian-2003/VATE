@@ -41,8 +41,13 @@ public class TextArea extends JScrollPane {
         public LineNumbers() {
             super();
             setEditable(false);
+<<<<<<< Updated upstream
             setBackground(Config.colors.LINE_NUMBERS_BACKGROUND);
             setForeground(Config.colors.LINE_NUMBERS_FOREGROUND);
+=======
+            //setBackground(Config.colors.lineNumbersBackground);
+            //setForeground(Config.colors.lineNumbersForeground);
+>>>>>>> Stashed changes
         }
 
 
@@ -181,8 +186,13 @@ public class TextArea extends JScrollPane {
             undoHandler = new UndoHandler();
             undoManager = new UndoManager();
 
+<<<<<<< Updated upstream
             setBackground(Config.colors.TEXT_EDITOR_BACKGROUND);
             setForeground(Config.colors.TEXT_EDITOR_FOREGROUND);
+=======
+            //setBackground(Config.colors.textEditorBackground);
+            //setForeground(Config.colors.textEditorForeground);
+>>>>>>> Stashed changes
 
             //Add a document listener that can change the line numbers when needed:
             setText("");
