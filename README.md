@@ -1,10 +1,9 @@
-<img src="res/icon256x256.ico" height="100" align="right">
+<img src="resources/icon256x256.ico" height="100" align="right">
 
 # Very Advanced Text Editor (VATE)
 ![](https://img.shields.io/github/contributors/Christian-2003/VATE?color=green)
 ![](https://img.shields.io/github/languages/code-size/Christian-2003/VATE)
-![](https://img.shields.io/github/license/Christian-2003/VATE?color=red
-)
+![](https://img.shields.io/github/license/Christian-2003/VATE?color=red)
 ![](https://img.shields.io/github/issues/Christian-2003/VATE)
 
 
@@ -12,7 +11,7 @@ VATE is a lightweight text editor developed with Java Swing for educational purp
 
 <br>
 
-![](res/VATE_Main_Window.png)
+![](screenshots/VATE_Main_Window.png)
 <br>
 
 ## Table of contents

@@ -2,6 +2,8 @@ package backend.files.csv;
 
 import backend.config.Config;
 import backend.files.File;
+import backend.files.ResourcesFile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  * @author      Christian-2003
  * @version     01 June 2023
  */
-public class CSVFile<T extends CSVFileConvertible> extends File {
+public class CSVFile<T extends CSVFileConvertible> extends ResourcesFile {
 
     /**
      * Generates a new CSV File.

@@ -32,7 +32,7 @@ public class UsedSoftwareHandle {
      */
     public UsedSoftwareHandle() throws InvalidCSVException {
         String[][] csvTable = new String[0][0];
-        softwareArchive = new CSVFile<UsedSoftware>("licensedSoftware.csv");
+        softwareArchive = new CSVFile<UsedSoftware>("/licensedSoftware.csv");
         try {
             csvTable = softwareArchive.loadCSV();
         }
