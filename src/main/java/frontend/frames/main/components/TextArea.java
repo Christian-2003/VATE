@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
  * @author  Christian-2003
  * @version 25 May 2023
  */
+@SuppressWarnings("ALL")
 public class TextArea extends JScrollPane {
 
     /**
@@ -41,13 +42,8 @@ public class TextArea extends JScrollPane {
         public LineNumbers() {
             super();
             setEditable(false);
-<<<<<<< Updated upstream
-            setBackground(Config.colors.LINE_NUMBERS_BACKGROUND);
-            setForeground(Config.colors.LINE_NUMBERS_FOREGROUND);
-=======
             //setBackground(Config.colors.lineNumbersBackground);
             //setForeground(Config.colors.lineNumbersForeground);
->>>>>>> Stashed changes
         }
 
 
@@ -62,7 +58,7 @@ public class TextArea extends JScrollPane {
             StringBuilder lineNumbers = new StringBuilder();
             for (int i = 1; i < root.getElementIndex(documentLength) + 2; i++) {
                 lineNumbers.append(i);
-                lineNumbers.append(Config.formats.LINE_SEPARATOR);
+                lineNumbers.append(Config.formats.lineSeparator);
             }
 
             //Set the component's text to the generated line numbers:
@@ -186,13 +182,8 @@ public class TextArea extends JScrollPane {
             undoHandler = new UndoHandler();
             undoManager = new UndoManager();
 
-<<<<<<< Updated upstream
-            setBackground(Config.colors.TEXT_EDITOR_BACKGROUND);
-            setForeground(Config.colors.TEXT_EDITOR_FOREGROUND);
-=======
             //setBackground(Config.colors.textEditorBackground);
             //setForeground(Config.colors.textEditorForeground);
->>>>>>> Stashed changes
 
             //Add a document listener that can change the line numbers when needed:
             setText("");
@@ -221,12 +212,43 @@ public class TextArea extends JScrollPane {
         }
 
 
+        /**
+         * Undoes changes.
+         */
         public void undo() {
             undoAction.actionPerformed(null);
         }
 
+        /**
+         * Redoes changes.
+         */
         public void redo() {
             redoAction.actionPerformed(null);
+        }
+
+
+        /**
+         * I do not know what this method does, but it is needed to prevent automatic line wrapping within this
+         * TextPane.
+         *
+         * @return  I do not know...
+         */
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            if (getUI().getPreferredSize(this).width <= getParent().getSize().width) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Returns the preferred size of the TextPane.
+         *
+         * @return  Preferred size of the TextPane.
+         */
+        @Override
+        public Dimension getPreferredSize() {
+            return getUI().getPreferredSize(this);
         }
 
 
@@ -260,7 +282,7 @@ public class TextArea extends JScrollPane {
          * @return  Number of line separators.
          */
         private int countLineSeparators() {
-            Pattern pattern = Pattern.compile(Config.formats.LINE_SEPARATOR);
+            Pattern pattern = Pattern.compile(Config.formats.lineSeparator);
             Matcher matcher = pattern.matcher(getText());
             return (int)(matcher.results().count());
         }
@@ -297,7 +319,7 @@ public class TextArea extends JScrollPane {
 
         updateFont();
 
-        setText(Config.formats.LINE_SEPARATOR);
+        setText(Config.formats.lineSeparator);
         setText("");
 
         setViewportView(textPane);
@@ -350,7 +372,7 @@ public class TextArea extends JScrollPane {
      * Updates the font of the TextArea to the attributes (Font-family and size) that are stored within the config.
      */
     public void updateFont() {
-        Font font = new Font(Config.fonts.TEXT_EDITOR_FONT, Font.PLAIN, Config.fonts.TEXT_EDITOR_FONT_SIZE);
+        Font font = new Font(Config.fonts.textEditorFont, Font.PLAIN, Config.fonts.textEditorFontSize);
         lineNumbers.setFont(font);
         textPane.setFont(font);
     }
@@ -395,14 +417,12 @@ public class TextArea extends JScrollPane {
      * @param replacement   Replacement to be inserted.
      */
     public void replace(int position, int length, String replacement) {
-        int currentCaretPosition = textPane.getCaretPosition();
         try {
             textPane.getDocument().remove(position, length);
             textPane.getDocument().insertString(position, replacement, null);
         }
         catch (BadLocationException e) {
-            //Could not remove the text:
-            return;
+            //Could not remove the text: DO nothing...
         }
 
     }

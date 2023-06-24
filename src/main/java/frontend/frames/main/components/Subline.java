@@ -63,13 +63,13 @@ public class Subline extends JPanel {
         setLength(length);
 
         //Configure the subline:
-        add(new JLabel(Config.strings.FILE_EXTENSION));
+        add(new JLabel(Config.strings.fileExtension));
         add(extensionLabel);
         add(new JLabel("  |  "));
-        add(new JLabel(Config.strings.FILE_LENGTH));
+        add(new JLabel(Config.strings.fileLength));
         add(lengthLabel);
         add(new JLabel("  |  "));
-        add(new JLabel(Config.strings.FILE_LINES));
+        add(new JLabel(Config.strings.fileLines));
         add(linesLabel);
     }
 

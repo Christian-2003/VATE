@@ -60,7 +60,7 @@ public abstract class Tab extends JPanel {
     }
 
     public void setFilepath(String path) {
-        file.setPath(path);
+        file.setAbsolutePath(path);
     }
 
     public boolean hasUnsavedChanges() {
@@ -76,7 +76,7 @@ public abstract class Tab extends JPanel {
      */
     @Override
     public String toString() {
-        return "{\"Title\": \"" + title + "\", \"Path\":\"" + file.getPath() + "\"}";
+        return "{\"Title\": \"" + title + "\", \"Path\":\"" + file.getAbsolutePath() + "\"}";
     }
 
 
@@ -87,8 +87,8 @@ public abstract class Tab extends JPanel {
         title = file.getNameWithExtension();
         unsavedChanges = false;
 
-        setBackground(Config.colors.TEXT_EDITOR_BACKGROUND);
-        setForeground(Config.colors.TEXT_EDITOR_FOREGROUND);
+        setBackground(Config.colors.textEditorBackground);
+        setForeground(Config.colors.textEditorForeground);
     }
 
 

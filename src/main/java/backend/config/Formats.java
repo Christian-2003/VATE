@@ -9,6 +9,6 @@ public class Formats {
     /**
      * Stores the default line separator that shall be used with all line feeds.
      */
-    public static String LINE_SEPARATOR = "\n";
+    public static String lineSeparator = "\n";
 
 }

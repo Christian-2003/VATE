@@ -2,13 +2,18 @@ package frontend.frames.main;
 
 import backend.config.Config;
 import backend.files.File;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import frontend.frames.main.components.Tab;
 import frontend.frames.main.components.TabbedPane;
 import frontend.menus.EditMenu;
 import frontend.menus.FileMenu;
+import frontend.menus.HelpMenu;
 
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.*;
 import java.io.IOException;
 
@@ -35,6 +40,11 @@ public class MainFrame extends JFrame {
      * Stores the edit menu of this frame.
      */
     private EditMenu editMenu;
+
+    /**
+     * Stores the help menu of this frame.
+     */
+    private HelpMenu helpMenu;
 
     /**
      * Stores the main menu bar.
@@ -69,8 +79,12 @@ public class MainFrame extends JFrame {
     private void create(String[] paths) {
         //Set LookAndFeel for this MainFrame:
         try {
-            if (Config.settings.USE_SYSTEM_LOOK_AND_FEEL) {
+            if (Config.settings.useSystemLookAndFeel) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
+            else {
+                //Use FlatLaf Light theme:
+                UIManager.setLookAndFeel(new FlatLightLaf());
             }
         }
         catch (Exception e) {
@@ -87,6 +101,8 @@ public class MainFrame extends JFrame {
         menuBar.add(fileMenu);
         editMenu = new EditMenu(this);
         menuBar.add(editMenu);
+        helpMenu = new HelpMenu(this);
+        menuBar.add(helpMenu);
         add(menuBar, BorderLayout.NORTH);
         tabs.updateTabbedPane(); //Enable / Disable menu items based on needs.
 
@@ -100,9 +116,9 @@ public class MainFrame extends JFrame {
                 }
             }
         }
-        else if (Config.settings.LOAD_PREVIOUS_FILES_WHEN_OPENED) {
+        else if (Config.settings.loadPreviousFilesWhenOpened) {
             //Open previously opened files as tabs:
-            for (String current : Config.settings.PREVIOUSLY_OPENED_FILES) {
+            for (String current : Config.settings.previouslyOpenedFiles) {
                 File newFile = new File(current);
                 if (newFile.exists()) {
                     tabs.addTab(current);
@@ -156,13 +172,13 @@ public class MainFrame extends JFrame {
      */
     public void newFile() {
         JFileChooser fileChooser = new JFileChooser();
-        int option = fileChooser.showDialog(this, Config.strings.CREATE_FILE_BUTTON);
+        int option = fileChooser.showDialog(this, Config.strings.createFileButton);
         if (option == JFileChooser.APPROVE_OPTION) {
             //Create the selected file:
             File newFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
             if (newFile.exists()) {
                 //The entered file already exists:
-                option = JOptionPane.showConfirmDialog(this, Config.strings.FILE_ALREADY_EXISTS);
+                option = JOptionPane.showConfirmDialog(this, Config.strings.fileAlreadyExists);
                 if (option == JOptionPane.NO_OPTION) {
                     //Do not create file:
                     return;
@@ -171,11 +187,11 @@ public class MainFrame extends JFrame {
             //Create new file:
             try {
                 newFile.save("");
-                tabs.addTab(newFile.getPath());
+                tabs.addTab(newFile.getAbsolutePath());
             }
             catch (IOException e) {
                 //Error: Could not create file:
-                JOptionPane.showMessageDialog(this, e.getMessage(), Config.strings.COULD_NOT_CREATE_FILE, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, e.getMessage(), Config.strings.couldNotCreateFile, JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -192,14 +208,14 @@ public class MainFrame extends JFrame {
             File newFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
             if (newFile.exists()) {
                 //The entered file already exists:
-                option = JOptionPane.showConfirmDialog(this, Config.strings.FILE_ALREADY_EXISTS);
+                option = JOptionPane.showConfirmDialog(this, Config.strings.fileAlreadyExists);
                 if (option == JOptionPane.NO_OPTION) {
                     //Do not create file:
                     return;
                 }
             }
             //Save the file:
-            tabs.saveActiveTabAs(newFile.getPath());
+            tabs.saveActiveTabAs(newFile.getAbsolutePath());
         }
     }
 
@@ -210,7 +226,7 @@ public class MainFrame extends JFrame {
     @Override
     public void dispose() {
         if (tabs.hasUnsavedChanges()) {
-            int option = JOptionPane.showConfirmDialog(this, Config.strings.UNSAVED_CHANGES);
+            int option = JOptionPane.showConfirmDialog(this, Config.strings.unsavedChanges);
             if (option == JOptionPane.YES_OPTION) {
                 //Save changes:
                 tabs.saveAllTabs();
@@ -222,9 +238,9 @@ public class MainFrame extends JFrame {
         }
 
         //Save currently opened tabs to config:
-        Config.settings.PREVIOUSLY_OPENED_FILES.clear();
+        Config.settings.previouslyOpenedFiles.clear();
         for (int i = 0; i < tabs.getTabCount(); i++) {
-            Config.settings.PREVIOUSLY_OPENED_FILES.add(((Tab)tabs.getComponentAt(i)).getFile().getPath());
+            Config.settings.previouslyOpenedFiles.add(((Tab)tabs.getComponentAt(i)).getFile().getAbsolutePath());
         }
 
         //Save the current dimension:

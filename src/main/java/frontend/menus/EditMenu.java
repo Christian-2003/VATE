@@ -28,7 +28,7 @@ public class EditMenu extends JMenu {
      * @param context   MainFrame in which this menu is located.
      */
     public EditMenu(MainFrame context) {
-        super(Config.strings.EDIT_MENU);
+        super(Config.strings.editMenu);
 
         this.context = context;
 
@@ -69,7 +69,7 @@ public class EditMenu extends JMenu {
         add(new JSeparator());
 
         //Configure search:
-        search = new JMenuItem(Config.strings.SEARCH);
+        search = new JMenuItem(Config.strings.search);
         search.addActionListener(e -> context.getTabs().search());
         search.setAccelerator(KeyStroke.getKeyStroke('F', InputEvent.CTRL_DOWN_MASK)); //Menu item is triggered with CTRL + F.
         add(search);
