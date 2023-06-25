@@ -10,7 +10,7 @@
     <groupId>de.vate</groupId>
     <artifactId>VATE</artifactId>
     <!-- Change version below to automatically generate a new release -->
-    <version>0.5</version>
+    <version>0.6</version>
 
     <build>
         <plugins>
